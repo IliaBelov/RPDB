@@ -1,0 +1,295 @@
+1.Выведите на экран любое сообщение
+
+Create or replace function Smth() returns varchar
+as $$
+begin
+	return 'Start Work';
+end
+$$ language plpgsql;
+
+SELECT Smth();
+
+2.Выведите на экран текущую дату
+Create or replace function DateYear() returns date
+as $$
+begin
+	return Now();
+end
+$$ language plpgsql;
+
+SELECT DateYear();
+
+3.Создайте две числовые переменные и присвойте им значение. 
+Выполните математические действия с этими числами и выведите результат на экран.
+
+Create or replace function Summ(a int, b int) returns int
+as $$
+begin
+	return a + b;
+end
+$$ language plpgsql;
+
+Select Summ(3,5);
+
+4.Написать программу двумя способами 1 - использование IF, 2 - использование CASE. 
+Объявите числовую переменную и присвоейте ей значение. 
+Если число равно 5 - выведите на экран "Отлично". 4 - "Хорошо". 3 - Удовлетворительно". 2 - "Неуд". 
+В остальных случаях выведите на экран сообщение, что введённая оценка не верна.
+
+Create or replace function MarkIf(mark int) returns varchar
+as $$
+begin
+	if(mark = 5) then return 'Отлично';
+	elseif(mark = 4) then return 'Хорошо';
+	elseif(mark = 3) then return 'Удовлетворительно';
+	elseif(mark = 2) then return 'Неуд';
+	else return 'Введённая оценка не верна';
+	end if;
+end
+$$ language plpgsql;
+
+Select MarkIf(2);
+
+Create or replace function MarkCase(mark int) returns varchar
+as $$
+begin
+	case mark
+	when 5 then return 'Отлично';
+	when 4 then return 'Хорошо';
+	when 3 then return 'Удовлетворительно';
+	when 2 then return 'Неуд';
+	else return 'Введённая оценка не верна';
+	end case;
+end
+$$ language plpgsql;
+
+
+Select MarkCase(2);
+
+5.Выведите все квадраты чисел от 20 до 30 3-мя разными способами (LOOP, WHILE, FOR).
+
+Create or replace procedure loops()
+language plpgsql
+as $$
+declare
+	num int := 20;
+begin
+	loop
+		exit when num > 30;
+		raise notice 'num: %',num*num;
+		num := num + 1;
+	end loop;
+end
+$$ 
+
+call loops();
+
+Create or replace procedure dos()
+language plpgsql
+as $$
+declare
+	num int := 20;
+begin
+		while(num <30)
+		loop
+			raise notice 'num1: %',num*num;
+			num := num + 1;
+		end loop;
+end
+$$;
+
+call dos();
+
+Create or replace procedure whiles()
+language plpgsql
+as $$
+declare
+	num int := 20;
+begin
+		while(num <30)
+		loop
+			raise notice 'num1: %',num*num;
+			num := num + 1;
+		end loop;
+end
+$$;
+
+call whiles();
+
+Create or replace procedure fors()
+language plpgsql
+as $$
+begin
+		for i in 20..30 
+		loop
+			raise notice 'num2: %',i*i;
+		end loop;
+end
+$$;
+
+call fors();
+
+6.Последовательность Коллатца. Берётся любое натуральное число. 
+Если чётное - делим его на 2, если нечётное, то умножаем его на 3 и прибавляем 1. 
+Такие действия выполняются до тех пор, пока не будет получена единица. 
+Гипотеза заключается в том, что какое бы начальное число n не было выбрано, всегда получится 1 на каком-то шаге. 
+Задания: написать функцию, входной параметр - начальное число, на выходе - количество чисел, пока не получим 1; 
+написать процедуру, которая выводит все числа последовательности. Входной параметр - начальное число.
+
+create or replace function Collatz(n int) returns int
+as $$
+declare
+	a int := 0;
+begin
+	while (n != 1)
+	loop
+		a := a+1;
+		case n % 2
+			when 0 then n := n / 2;
+			else 
+				n := n * 3 + 1;
+		end case;
+	end loop;
+	return a;
+end
+$$ language plpgsql;
+
+select Collatz(1);
+
+create or replace procedure CollatzMass(inout n int)
+language plpgsql
+as $$
+begin
+	while (n != 1)
+	loop
+		case n % 2
+			when 0 then
+				raise notice 'num: %', n;
+				n := n / 2;
+			else 
+				raise notice 'num: %', n;
+				n := n * 3 + 1;
+		end case;
+	end loop;
+	raise notice 'num: %', n;
+end
+$$;
+
+call CollatzMass(5);
+
+7.Числа Люка. Объявляем и присваиваем значение переменной - количество числе Люка. 
+Вывести на экран последовательность чисел. Где L0 = 2, L1 = 1 ; Ln=Ln-1 + Ln-2 (сумма двух предыдущих чисел). 
+Задания: написать фунцию, входной параметр - количество чисел, на выходе - последнее число (Например: входной 5, 2 1 3 4 7 - на выходе число 7); 
+написать процедуру, которая выводит все числа последовательности. Входной параметр - количество чисел.
+
+create or replace function Luke(n int) returns int
+as $$
+begin
+	if (n = 1) then return 2;
+	elsif (n=2) then return 1;
+	else
+		return Luke(n-1) + Luke(n-2);
+	end if;
+	return -1;
+	
+end
+$$ language plpgsql;
+
+select Luke(4);
+
+create or replace procedure LukeMass(inout n int)
+language plpgsql
+as $$
+declare
+	l0 int := 2;
+	l1 int := 1;
+	i int := 0;
+	lsum int := 0; 
+begin
+	RAISE NOTICE E'num0 = %  num1 = %', l0, l1;
+	WHILE (i < n - 2)
+	LOOP 
+		lsum := l0 + l1;
+		l0 := l1;
+		l1 := lsum;
+		i := i + 1;
+		RAISE NOTICE 'nums = %', l1;
+	END LOOP;
+end
+$$;
+
+call LukeMass(5);
+
+
+8.Напишите функцию, которая возвращает количество человек родившихся в заданном году.
+
+create or replace function BornInYear(years date) returns int
+as $$
+DECLARE 
+	p_count int;
+begin
+	select count(*) into p_count
+	from people
+	where people.birth_date = BornInYear.years;
+	return p_count;
+	
+end
+$$ language plpgsql;
+
+/*select BornInYear("1995");
+
+select *
+from people
+
+DROP FUNCTION borninyear(date)*/
+
+9.Напишите функцию, которая возвращает количество человек с заданным цветом глаз.
+
+create or replace function p_eyes(color varchar) returns int
+As $$
+declare 
+	p_count int;
+begin
+	select count(*) into p_count
+	from people
+	where people.eyes = p_eyes.color;
+	return p_count;
+end
+$$ language plpgsql;
+
+select p_eyes('blue');
+
+
+10.Напишите функцию, которая возвращает ID самого молодого человека в таблице.
+
+create or replace function youngest() returns setof int
+As $$
+begin
+	return query
+		select people.id           
+	    from people 
+		where people.birth_date = (select MAX(birth_date) 
+								   from people);
+end
+$$ language plpgsql;
+
+select youngest();
+
+11.Напишите процедуру, которая возвращает людей с индексом массы тела больше заданного. ИМТ = масса в кг / (рост в м)^2.
+
+
+
+12.Измените схему БД так, чтобы в БД можно было хранить родственные связи между людьми. 
+Код должен быть представлен в виде транзакции (Например (добавление атрибута): 
+BEGIN; ALTER TABLE people ADD COLUMN leg_size REAL; COMMIT;). 
+Дополните БД данными.
+
+
+13.Напишите процедуру, которая позволяет создать в БД нового человека с указанным родством.
+
+
+14.Измените схему БД так, чтобы в БД можно было хранить время актуальности данных человека (выполнить также, как п.12).
+
+
+15.Напишите процедуру, которая позволяет актуализировать рост и вес человека.
+
