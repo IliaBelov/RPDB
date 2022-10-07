@@ -292,4 +292,3 @@ BEGIN; ALTER TABLE people ADD COLUMN leg_size REAL; COMMIT;).
 
 
 15.Напишите процедуру, которая позволяет актуализировать рост и вес человека.
-
