@@ -276,22 +276,25 @@ $$ language plpgsql;
 select youngest();
 
 11.Напишите процедуру, которая возвращает людей с индексом массы тела больше заданного. ИМТ = масса в кг / (рост в м)^2.
+провальная попытка передать параметр и вывести данные.
 
-Create or replace procedure massindex(index in int)
+Create or replace procedure massindex(IN g int)
 language plpgsql
 as $$
+declare 
+    p people%Rowtype;
 begin
-	declare
-		select *
+	for p in
+		select name, surname
 		from people
-		where people.weight/(people.growth*people.growth/10000) > index
-end
+		where people.weight/(people.growth*people.growth/10000) > g
+	loop
+		RAISE NOTICE ' name: %, surname: %', p.name, p.surname;
+	end loop;
+end;
 $$;
 
-call massindex(24);
-
-select *
-from people
+call massindex(24)
 
 12.Измените схему БД так, чтобы в БД можно было хранить родственные связи между людьми. 
 Код должен быть представлен в виде транзакции (Например (добавление атрибута): 
