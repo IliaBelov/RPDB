@@ -285,7 +285,7 @@ declare
     p people%Rowtype;
 begin
 	for p in
-		select name, surname
+		select *
 		from people
 		where people.weight/(people.growth*people.growth/10000) > g
 	loop
