@@ -276,20 +276,77 @@ $$ language plpgsql;
 select youngest();
 
 11.Напишите процедуру, которая возвращает людей с индексом массы тела больше заданного. ИМТ = масса в кг / (рост в м)^2.
+провальная попытка передать параметр и вывести данные.
 
+Create or replace procedure massindex(IN g int)
+language plpgsql
+as $$
+declare 
+    p people%Rowtype;
+begin
+	for p in
+		select *
+		from people
+		where people.weight/(people.growth*people.growth/10000) > g
+	loop
+		RAISE NOTICE ' name: %, surname: %', p.name, p.surname;
+	end loop;
+end;
+$$;
 
+call massindex(24)
 
 12.Измените схему БД так, чтобы в БД можно было хранить родственные связи между людьми. 
 Код должен быть представлен в виде транзакции (Например (добавление атрибута): 
 BEGIN; ALTER TABLE people ADD COLUMN leg_size REAL; COMMIT;). 
 Дополните БД данными.
 
+begin;
+create table relatives
+(
+	parent_id int references people(id),
+	child_id int references people(id)
+);
+commit;
+
+begin;
+insert into relatives(parent_id, child_id) 
+values ('1','6');
+commit;
+
+select * from relatives
 
 13.Напишите процедуру, которая позволяет создать в БД нового человека с указанным родством.
 
+Create or replace procedure add_relatives(parent_id int, child_id int)
+language plpgsql
+as $$
+begin
+	insert into relatives(parent_id, child_id)
+	values (add_relatives.parent_id, add_relatives.child_id);
+end
+$$;
+
+call add_relatives(1,5);
 
 14.Измените схему БД так, чтобы в БД можно было хранить время актуальности данных человека (выполнить также, как п.12).
-
+begin;
+create table data_time
+(
+	people_id int primary key references people(id),
+	
+)
+commit;
 
 15.Напишите процедуру, которая позволяет актуализировать рост и вес человека.
+
+create or replace procedure growth_weight(id int,growth real, weight real)
+language plpgsql
+as $$
+begin
+	UPDATE people
+	SET growth = growth_weight.growth, weight = growth_weight.weight
+	WHERE people.id = growth_weight.id;
+end
+$$;
 
