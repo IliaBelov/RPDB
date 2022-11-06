@@ -30,9 +30,11 @@ func NewStore(connString string) *Store {
 }
 
 func (s *Store) ListPeople() ([]People, error) {
-	return nil, nil
+	s.conn.Query(context.Background(), "Select name, id From people")
+	return []People{}, nil
 }
 
 func (s *Store) GetPeopleByID(id string) (People, error) {
+	s.conn.QueryRow(context.Background(), "Select name From people where id=%1 ", id).Scan(&People{Name: id})
 	return People{}, nil
 }
