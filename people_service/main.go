@@ -18,5 +18,5 @@ func main() {
 
 	conn := "postgress://belov@95.217.232.188:7777/belov"
 	s := store.NewStore(conn)
-	fmt.Printf(s.GetPeopleByID())
+	fmt.Println(s.GetPeopleByID("1"))
 }
