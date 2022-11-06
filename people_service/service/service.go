@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/RyabovNick/databasecourse_2/golang/tasks/people_service/service/store"
+	"github.com/IliaBelov/RPDB/tree/people_service/people_service/service/store"
 )
 
 // TODO:
