@@ -23,9 +23,8 @@ func New() *Creature {
 	}
 }
 
-func (c *Creature) eat() {
+func (c *Creature) Eat() {
 vozvrat:
-
 	fmt.Println("Какой травки поедим,жухлой(Ж) или зелёной(З)?")
 	fmt.Println("1. Жухлой")
 	fmt.Println("2. Зелёной")
@@ -48,7 +47,7 @@ vozvrat:
 
 }
 
-func (c *Creature) dig() {
+func (c *Creature) Dig() {
 vozvrat:
 	fmt.Println("Как будем копать?")
 	fmt.Println("1. Интенсивно")
@@ -70,7 +69,7 @@ vozvrat:
 
 }
 
-func (c *Creature) fight() {
+func (c *Creature) Fight() {
 vozvrat:
 	fmt.Println("С кем будем драться?")
 	fmt.Println("1. Со слабым существом (вес 30)")
@@ -105,7 +104,7 @@ func (c *Creature) randfight(enemy int) {
 	}
 }
 
-func (c *Creature) night() {
+func (c *Creature) Night() {
 	c.hole -= 2
 	c.hp += 20
 	c.rep -= 2
@@ -113,7 +112,7 @@ func (c *Creature) night() {
 	//watch()
 }
 
-func (c *Creature) check() int {
+/*func (c *Creature) check() int {
 	if c.hole == 0 || c.hp == 0 || c.rep == 0 || c.mass == 0 {
 
 		return -1
@@ -124,4 +123,4 @@ func (c *Creature) check() int {
 	} else {
 		return 0
 	}
-}
+}*/
