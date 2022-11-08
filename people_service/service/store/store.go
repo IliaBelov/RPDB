@@ -6,8 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/pgx"
+	"github.com/golang-migrate/migrate"
 	"github.com/jackc/pgx/v4"
 )
 
@@ -30,12 +29,15 @@ func NewStore(connString string) *Store {
 	// Read migrations from /home/mattes/migrations and connect to a local postgres database.
 	m, err := migrate.New("file://migrations", connString)
 	if err != nil {
-		return fmt.Errorf("migrate: %v", err)
+		fmt.Errorf("migrate new: %v", err)
+		return nil
+
 	}
 
 	// Migrate all the way up ...
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		return fmt.Errorf("migrate up: %v", err)
+		fmt.Errorf("migrate up: %v", err)
+		return nil
 	}
 	fmt.Println("migration is done")
 	return &Store{
