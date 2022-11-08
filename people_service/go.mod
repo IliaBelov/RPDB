@@ -2,7 +2,12 @@ module github.com/IliaBelov/RPDB/tree/people_service/people_service
 
 go 1.19
 
-require github.com/jackc/pgx/v4 v4.17.2
+require (
+	github.com/golang-migrate/migrate v3.5.4+incompatible
+	github.com/golang-migrate/migrate/v4 v4.15.2
+	github.com/jackc/pgx/v5 v5.0.4
+	)
+
 
 require (
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
