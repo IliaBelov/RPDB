@@ -14,55 +14,56 @@ func main() {
 	input := scanner.Text()
 	fmt.Println("You entered:", input)*/
 	//watch()
-	hfme := creature.New()
-	hfme.Eat()
-	//day()
-}
 
-/*func watch() {
-	fmt.Println("Д:", hole)
-	fmt.Println("З:", hp)
-	fmt.Println("У:", rep)
-	fmt.Println("В:", mass)
-}*/
-
-func Day() {
-	//new:
-	fmt.Println("Наступил новый день.")
-	//watch()
-vozvrat:
-	fmt.Println("Что будем делать?")
-	fmt.Println("1. Копать нору")
-	fmt.Println("2. Поесть травки")
-	fmt.Println("3. Пойти подраться")
-	fmt.Println("4. Поcпать")
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	input := scanner.Text()
-	switch input {
-	case "1":
-		//dig()
-	case "2":
-		//eat()
-	case "3":
-		//fight()
-	case "4":
-		//night()
-	default:
-		goto vozvrat
-	}
-	/*switch check() {
-	case 0:
-		{
-			night()
-			goto new
+	cr := creature.New()
+	var live bool = true
+	for live {
+	vozvrat:
+		fmt.Println("Наступил новый день")
+		cr.Param()
+		fmt.Println("Что будем делать?")
+		fmt.Println("1. Копать нору")
+		fmt.Println("2. Поесть травки")
+		fmt.Println("3. Пойти подраться")
+		fmt.Println("4. Поcпать")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		input := scanner.Text()
+		switch input {
+		case "1":
+			cr.Dig()
+		case "2":
+			cr.Eat()
+		case "3":
+			cr.Fight()
+		case "4":
+			cr.Night()
+		default:
+			goto vozvrat
 		}
-	case 1:
-		fmt.Println("Вы выйграли!")
-	case -1:
-		fmt.Println("ВЫ ПРОИГРАЛИ!")
-	default:
-		fmt.Println("ВЫЛЕТ")
-	}*/
+		switch cr.Сheck() {
+		case 0:
+			{
+				fmt.Println("Вы спите")
+				cr.Night()
+			}
+		case 1:
+			{
+				fmt.Println("Вы выйграли!")
+				live = false
+			}
+		case -1:
+			{
+				fmt.Println("ВЫ ПРОИГРАЛИ!")
+				live = false
+			}
+		default:
+			{
+				fmt.Println("ВЫЛЕТ")
+				live = false
+			}
+		}
 
+	}
+	fmt.Println("Конец игры")
 }

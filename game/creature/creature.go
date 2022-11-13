@@ -23,25 +23,37 @@ func New() *Creature {
 	}
 }
 
+func (c *Creature) Param() {
+	fmt.Printf("HP:%v \n", c.hp)
+	fmt.Printf("HOLE:%v\n", c.hole)
+	fmt.Printf("REP:%v\n", c.rep)
+	fmt.Printf("MASS:%v\n", c.mass)
+}
+
 func (c *Creature) Eat() {
 vozvrat:
 	fmt.Println("Какой травки поедим,жухлой(Ж) или зелёной(З)?")
-	fmt.Println("1. Жухлой")
-	fmt.Println("2. Зелёной")
+	fmt.Println("1. Жухлой ")
+	fmt.Println("2. Зелёной ")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	grass := scanner.Text()
-	if grass == "1" {
-		c.hp += 10
-		c.mass += 15
-	} else if grass == "2" {
-		if c.rep < 30 {
-			c.hp -= 30
-		} else if c.rep >= 30 {
-			c.hp += 30
-			c.mass += 30
+	switch grass {
+	case "1":
+		{
+			c.hp += 10
+			c.mass += 15
 		}
-	} else {
+	case "2":
+		{
+			if c.rep < 30 {
+				c.hp -= 30
+			} else {
+				c.hp += 30
+				c.mass += 30
+			}
+		}
+	default:
 		goto vozvrat
 	}
 
@@ -55,18 +67,22 @@ vozvrat:
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	dig := scanner.Text()
-	if dig == "1" {
-		fmt.Println("Вы интенсивно копаете...")
-		c.hole += 5
-		c.hp -= 30
-	} else if dig == "2" {
-		fmt.Println("Вы лениво копаете...")
-		c.hole += 5
-		c.hp -= 30
-	} else {
+	switch dig {
+	case "1":
+		{
+			fmt.Println("Вы интенсивно копаете...")
+			c.hole += 5
+			c.hp -= 30
+		}
+	case "2":
+		{
+			fmt.Println("Вы лениво копаете...")
+			c.hole += 5
+			c.hp -= 30
+		}
+	default:
 		goto vozvrat
 	}
-
 }
 
 func (c *Creature) Fight() {
@@ -79,16 +95,20 @@ vozvrat:
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	enemy := scanner.Text()
-	if enemy == "1" {
-		c.randfight(30)
-	}
-	if enemy == "2" {
-
-		c.randfight(50)
-	}
-	if enemy == "3" {
-		c.randfight(70)
-	} else {
+	switch enemy {
+	case "1":
+		{
+			c.randfight(30)
+		}
+	case "2":
+		{
+			c.randfight(50)
+		}
+	case "3":
+		{
+			c.randfight(70)
+		}
+	default:
 		goto vozvrat
 	}
 
@@ -97,10 +117,12 @@ vozvrat:
 func (c *Creature) randfight(enemy int) {
 	if rand.Intn(c.mass+enemy) > c.mass {
 		fmt.Println("Вы проиграли битву")
-		c.hp -= enemy
+		c.hp = c.hp - enemy/2
+		c.rep = c.rep - ((c.mass + enemy) / 5)
 	} else {
 		fmt.Println("Вы выйграли битву")
-		c.hp -= enemy / 3
+		c.hp = c.hp - (enemy / 3)
+		c.rep = c.rep + (c.mass+enemy)/4
 	}
 }
 
@@ -112,15 +134,12 @@ func (c *Creature) Night() {
 	//watch()
 }
 
-/*func (c *Creature) check() int {
-	if c.hole == 0 || c.hp == 0 || c.rep == 0 || c.mass == 0 {
-
+func (c *Creature) Сheck() int {
+	if c.hole <= 0 || c.hp <= 0 || c.rep <= 0 || c.mass <= 0 {
 		return -1
-
 	} else if c.rep >= 100 {
-
 		return 1
 	} else {
 		return 0
 	}
-}*/
+}
